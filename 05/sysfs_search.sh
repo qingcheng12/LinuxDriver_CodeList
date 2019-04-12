@@ -27,3 +27,4 @@ for i in /sys/block/*/dev /sys/block/*/*/dev
  #mknod /dev/$DEVNAME c $MAJOR $MINOR
  fi
  done
+ 
