@@ -177,7 +177,7 @@ static const struct file_operations globalmem_fops =
 /*初始化并注册cdev*/
 static void globalmem_setup_cdev(struct globalmem_dev *dev, int index)
 {
-  int err, devno = MKDEV(globalmem_major, index);
+  int err, devno = MKDEV(globalmem_major, index); // MKDEV(int major, int minor)通过主设备号和次设备号生成dev_t
 
   cdev_init(&dev->cdev, &globalmem_fops);
   dev->cdev.owner = THIS_MODULE;
@@ -199,7 +199,7 @@ int globalmem_init(void)
   else  /* 动态申请设备号 */
   {
     result = alloc_chrdev_region(&devno, 0, 1, "globalmem");
-    globalmem_major = MAJOR(devno);
+    globalmem_major = MAJOR(devno); // MAJOR(dev_t dev)获取主设备号 , MINOR(dev_t dev)次设备号
   }  
   if (result < 0)
     return result;
