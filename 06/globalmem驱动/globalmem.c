@@ -179,10 +179,10 @@ static void globalmem_setup_cdev(struct globalmem_dev *dev, int index)
 {
   int err, devno = MKDEV(globalmem_major, index); // MKDEV(int major, int minor)通过主设备号和次设备号生成dev_t
 
-  cdev_init(&dev->cdev, &globalmem_fops);
+  cdev_init(&dev->cdev, &globalmem_fops); // cdev_init（） 函数用于初始化cdev的成员， 并建立cdev和file_operations之间的连接
   dev->cdev.owner = THIS_MODULE;
   dev->cdev.ops = &globalmem_fops;
-  err = cdev_add(&dev->cdev, devno, 1);
+  err = cdev_add(&dev->cdev, devno, 1);  // 向系统添加一个cdev， 完成字符设备的注册
   if (err)
     printk(KERN_NOTICE "Error %d adding LED%d", err, index);
 }
@@ -194,11 +194,11 @@ int globalmem_init(void)
   dev_t devno = MKDEV(globalmem_major, 0);
 
   /* 申请设备号*/
-  if (globalmem_major)
+  if (globalmem_major)  // 已知起始设备的设备号
     result = register_chrdev_region(devno, 1, "globalmem");
-  else  /* 动态申请设备号 */
+  else  /* 动态申请设备号 , 设备号未知， 向系统动态申请未被占用的设备号 */
   {
-    result = alloc_chrdev_region(&devno, 0, 1, "globalmem");
+    result = alloc_chrdev_region(&devno, 0, 1, "globalmem");  // 得到的设备号放入第一个参数devno中
     globalmem_major = MAJOR(devno); // MAJOR(dev_t dev)获取主设备号 , MINOR(dev_t dev)次设备号
   }  
   if (result < 0)
@@ -216,7 +216,8 @@ int globalmem_init(void)
   globalmem_setup_cdev(globalmem_devp, 0);
   return 0;
 
-  fail_malloc: unregister_chrdev_region(devno, 1);
+  fail_malloc: 
+    unregister_chrdev_region(devno, 1);
   return result;
 }
 
@@ -225,7 +226,7 @@ void globalmem_exit(void)
 {
   cdev_del(&globalmem_devp->cdev);   /*注销cdev*/
   kfree(globalmem_devp);     /*释放设备结构体内存*/
-  unregister_chrdev_region(MKDEV(globalmem_major, 0), 1); /*释放设备号*/
+  unregister_chrdev_region(MKDEV(globalmem_major, 0), 1); /*释放设备号 , 释放原先申请的设备号*/ 
 }
 
 MODULE_AUTHOR("Song Baohua");
