@@ -27,7 +27,7 @@
 
 #define GLOBALMEM_SIZE	0x1000	/*全局内存最大4K字节*/
 #define MEM_CLEAR 0x1  /*清0全局内存*/
-#define GLOBALMEM_MAJOR 254    /*预设的globalmem的主设备号*/
+#define GLOBALMEM_MAJOR 230    /*预设的globalmem的主设备号*/
 
 static globalmem_major = GLOBALMEM_MAJOR;
 /*globalmem设备结构体*/
