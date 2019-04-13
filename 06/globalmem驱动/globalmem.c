@@ -13,8 +13,17 @@
 #include <linux/init.h>
 #include <linux/cdev.h>
 #include <asm/io.h>
-#include <asm/system.h>
-#include <asm/uaccess.h>
+//#include <asm/system.h>
+#include <asm/switch_to.h>
+#include <linux/slab.h>
+#include <linux/uaccess.h>
+
+#include <linux/version.h>
+#if LINUX_VERSION_CODE > KERNEL_VERSION(3, 3, 0)
+        #include <asm/switch_to.h>
+#else
+        #include <asm/system.h>
+#endif
 
 #define GLOBALMEM_SIZE	0x1000	/*全局内存最大4K字节*/
 #define MEM_CLEAR 0x1  /*清0全局内存*/
